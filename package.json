@@ -1,0 +1,33 @@
+{
+	"name": "node-red-contrib-ui-simple-level",
+	"description": "A simple level indicator for the Node-RED Dashboard.",
+	"keywords": [
+		"dashboard",
+		"level",
+		"node-red",
+		"ui"
+	],
+	"version": "1.0.0",
+	"license": "MIT",
+	"author": {
+		"name": "Patrick Knabe",
+		"email": "patrickknabe@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/patrickknabe/node-red-contrib-ui-simple-level.git"
+	},
+	"bugs": {
+		"url": "https://github.com/patrickknabe/node-red-contrib-ui-simple-level/issues"
+	},
+	"homepage": "https://github.com/patrickknabe/node-red-contrib-ui-simple-level#readme",
+	"peerDependencies": {
+		"node-red-dashboard": ">=2.23.2"
+	},
+	"node-red": {
+		"version": ">=2.0.0",
+		"nodes": {
+			"ui_simple_level": "level/level.js"
+		}
+	}
+}

@@ -1,0 +1,77 @@
+<script type="text/javascript">
+	RED.nodes.registerType( 'ui_simple_level', {
+		category: 'dashboard',
+		paletteLabel: 'level indicator',
+		inputs: 1,
+		outputs: 0,
+		icon: 'font-awesome/fa-arrows-v',
+		color: '#2ed7e4',
+		defaults: {
+			name: { value: '' },
+			green:  { value: 50, validate: ( green ) => green > 0 && green < ( $( '#node-input-orange' ).val() || 99 ) },
+			orange: { value: 75, validate: ( orange ) => orange > 1 && orange < 100 },
+			group: { type: 'ui_group', required: true },
+			order: { value: 0 },
+			width: { value: 0, validate: function( width ) {
+				const group = RED.nodes.node( $( '#node-input-group' ).val() || this.group );
+				const valid = !group || +width <= +group.width;
+
+				$( '#node-input-size' ).toggleClass( 'input-error', !valid );
+
+				return valid;
+			} },
+			height: { value: 0 }
+		},
+		label: function() {
+			return this.name || 'level indicator' ;
+		},
+		oneditprepare: () => {
+			$( '#node-input-size' ).elementSizer( {
+				width: "#node-input-width",
+				height: "#node-input-height",
+				group: "#node-input-group"
+			} );
+		}
+	} );
+</script>
+
+<script type="text/html" data-template-name="ui_simple_level">
+	<div class="form-row">
+		<label for="node-input-name"><i class="fa fa-fw fa-tag"></i> Name</label>
+		<input type="text" id="node-input-name" placeholder="Name">
+	</div>
+	<br />
+	<div class="form-row">
+		<label for="node-input-name"><i class="fa fa-fw fa-check"></i> Green</label>
+		<input type="number" id="node-input-green" min="0" max="100" style="width: 35%;">
+	</div>
+	<div class="form-row">
+		<label for="node-input-name"><i class="fa fa-fw fa-exclamation"></i> Orange</label>
+		<input type="number" id="node-input-orange" min="0" max="100" style="width: 35%;">
+	</div>
+	<br />
+	<div class="form-row" id="template-row-group">
+		<label><i class="fa fa-fw fa-table"></i> Group</label>
+		<input type="text" id="node-input-group" />
+	</div>
+	<div class="form-row" id="template-row-size">
+		<label><i class="fa fa-fw fa-object-group"></i> Size</label>
+		<input type="hidden" id="node-input-width" />
+		<input type="hidden" id="node-input-height" />
+		<button id="node-input-size" class="editor-button"></button>
+	</div>
+</script>
+
+<script type="text/html" data-help-name="ui_simple_level">
+	<p style="text-align: justify;">
+		A simple level indicator for the Node-RED Dashboard.
+	</p>
+	<br />
+	<p style="text-align: center;">
+		<img alt="ui_clock" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATIAAADHCAIAAAAVjEiMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MkY5QTU5MEExNzE2MTFFREFDODU4QTcwMTM0RTUzOTEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MkY5QTU5MEIxNzE2MTFFREFDODU4QTcwMTM0RTUzOTEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyRjlBNTkwODE3MTYxMUVEQUM4NThBNzAxMzRFNTM5MSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyRjlBNTkwOTE3MTYxMUVEQUM4NThBNzAxMzRFNTM5MSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PoY+aj4AAAngSURBVHja7Nx/TJTnAcDxR+7gONyhcOUsnWJdDNHRSTLAZa6iJbIG1ouWqpubq5pG3WKtIZ0Jettflh8JM2Zat6Jp6qIrXbGou62k0TjR1CZFltBKNYbUcVqQs2C5U4+DA/a+z/vecZy2Jq5cre/3EyL3431RHu57z/O+L60Y/fr1NKxNUzx/uGd0InzW8Lz88g2fjT68GENDj2GCAPCAIUvA4Fl2HV6THrbusFd9qGWnvLfmHa+2SUtt9LPew+siO6w53MXPizE0xBgmxHUsntjgjtw9tmGO+j0XFG5T77n/eVr7/js/UT85nyl0qGMxZ8OxyA7uDU8Y/lXFGBpjDOOXZcvf5Fhse69P9Z5LHRH36S5R8JRLhG+LrtNu9ft3On/sEOcOyrFw6Tuoo+Z2f+A18iuKMTTIGMYtS/3tR1Q/LVcCT1fKN55OZQjyC13h294P3HLIXlz+mLLDR3KHSn2HarnRp50GfkUxhkYZQ3O8hqOzUy4DnPsv/vU5x/in1PVDZbWo/HdLoVBHw/VUgbrDp3KhsXTfxTeWj9uhy7CvKsbQKGMYt9ly5syl8m1m/cGW8GpiZ61+U18/fPLqq+pbkaswX+7wPae29D94LrxD7c4WQx8VMYZGGcMJzNK9fs7Y2at3xPJNrujFQHj9IGnrh2PayqGwQD7meO5FfYefhneoNtyLiDE05hjG8Uxs/st95/c5x+479/2qIHr9oNFWDtqDL/dd3Lc0aof9vy4QxsYYGmMMJ42OjgoADxKyBMgSAFkCZAncj5vzHmcQIvgvSACyBECWAFkCIEuALAGQJUCWAMgSAFkCZAmALAGyBECWAFkCIEuALAGQJQCyBMgSAFkCZAmALAGyBECWAMgSIEsAZAmQJQCyBMgSAFkCZAmALAGQJUCWAMgSIEsAZAmQJQCyBECWAFkCIEuALAGQJUCWAMgSIEsAZAmALAGyBECWAFkCIEuALAGQJQCyBMgSAFkCZAmALAGyBBA3Zobg/xc8lcMgRFgWtzMIzJYAWQIgS4AsAZAlALIEyBIAWQJkCYAsAbIEQJYAWQIgSwBkCZAlALIEyBIAWQJkCYAsAZAlQJYAyBIgSwBkCZAlALIEyBIAWQIgS4AsAZAlQJYAyBIgSwBkCYAsAbIEQJYAWQIgS4AsAZAlQJYAyBIAWQJkCYAsAbIEQJYAWQIgSwBkCZAlALIEyBIAWQJkCYAsAbIEQJYAyBIgSwBkCZAlALIEyBIAWQIgS4AsAZAlQJYAyBIgSwBkCZAlALIEQJYAWQIgS4AsAZAlQJYAyBIAWQJkCYAsAbIEQJYAWQIgS8CQzH/5z88ZhYjf/vDvDAKYLQGQJUCWAMgSIEsAZAmQJQCyBMiSIQAeNOa4/C39p5Z8eFzM3nhiVpb2wIXLrs0dkadzti/6ZVGSiH0qavvr195c9XH72vmVq6cY7Sd0rqHbWR91f8HUtt9ZHdrt3sAL6794V7u9yt69IjyGl25mVvjlLZu78Tv50RtHb2Ygo0d7/S8FtNuWI9Mtefrjw3uu3qqN2q4k3VaXMkm9NRjM8gZjtx8e2tgdaEqd7Ek1fbtnS//JNpfa5Fdpr2p+8+Sgnt/mDqXSyhOLVi7qqDvUL58fbHvt43alUuM1+VWU9iJNKup7MxsG9fwq/KXl07obp+1d4HdqD4qRxjeUjW1uIzaptBdpUhF89mqw9R57DG30BpVEPdNtu63BZ33DettfBJqUSie4yQmfLT2HjtcduNsTc2dVnpilJ7ej+e1m0d6lDFuS+DzQLkRxpvrSSVOevxzwiyni5AVlg+I94ZnTiJL37k8rs0c/MtL4D//YJKlNj/W3GouSynqHlVYrpqlvuFkzhegc9iq3zvRvOisqasIzp5Fcvx2sHZv0tOkxuO92kj4rKqzWVntixrgsR5qE2GpWN5iRKMTQyHVhErcDSttbHZGZ9lt9bLnoBxV7Zt9zq5zHrOqnR6w5QnR1K2/wgzcuCzHLahP9rVVesXb+4rnGDHLE06n8mZhlj3k8dOWs+qkiV85+2Sl7FyifBq70CmE3lQrxUc+Ivu9Mk0MM1u8aUALekm3EEfSEQuqnVLPMyfSLdHUqagqNaPmdV0c3ISNmH1NCiRDnQ6PKDHllSNtg+K2+kEidvDkuq42JnS2zVhdXysPFuy5ua6q8+p218/Vjy4xHndt7aqqaXVWy59VTlPn2OMtX4XeWxRwrmmcoHZ4VNW2DW7KTRG/wX7JStcZsa3X5QO6unsxd8kB0RZJydFpj0OWrfBGalRd5SPhCrammPDH6fkBWKidAvUbfrSyfvBE5aDQlvpI+lNfnz+qTc2mqqdXnq43L8jWep3zu5UCfZ/UUbY1qK8qtLBKR0z81B0TO9u8aePmqz4pRfQpZZsKTP0oWZwfUQ8r62H0cC9O6F44dgubWi9LylHyjjmCGJbFEhJrkIeUdx5DqYnWM0qfQy8xISfGkhB8fDOb5REl6Ul68/s3f2AUSNb8TxfLUjnKvo27HNX/sJv2nNncoc6azSLTtOO5aon7oZ4YMJGlLY2a39lFj08p8/5LennuVvlFpuV0uYsW8aTE/0ME/KcecC6ZWLxSNf+zOLFM/XjgzYqwhNCXWOSyRw8gjchGrL1yTLJ7pqdrHkVStzFDrnWeMvEFlx1dSxNFeX9ZV9WPj7dGHM8vIyy53uTzybA7ciF3l/ve4cKz8zaM3DjW/3Tx7o9LwntntVRfarhv1bT87qWL8A/kr9GJf//6wXMQmzxh/COo9c6tGJO9dZ/U09Gw6qyyA1bbf3dXf2Gu0N7dwfnbzFbmILTHHvvLzki1ffsbIvHtqosfnfylgOaJ8EYelqS9wdPhhzlJ4WuVVykXWtHGDcc1d5c3ZPjc3Q5770Z5VTwh5b3xu1CwvDdaIu7QXvvihHEkmPxn9VG9g266B0vIpZXZ57meBST0WUE8IyTNDhnRdnk1Vjt1KLJNinmodkEtca8K4I6bhod/3hUrSrctM8tyP9qx6Qih0ZSKz/GaOLe+8cJLzk3Rb1NJLv1BZFL5SciBw4w/Cpl4+ceQ8YqTXUfQvDGhWTdavlIz9zoBGnRUdsa3a3AvDV0rqhz3K0le9fJL8M7uhYrzzdwaUzLRKb+f1haI33WqLvlISvlCZEr5S4htRxjBDPSI1l5geuixjFO8pjr7+4VFXrWMXKrNWzy8+8GHdkg5ty9wM457/KS2f9vrCuy5won6bRzqnrlrHLlTmr7BX1Pdqp3MrajLL7MYdw62O1C+5yGHenZmyLCq2VnXVOnahMi918lbfLe28kfJFlk1klpP+3LpSIOz+/hdbwVM5DF2EZXH7fex1c97jDN0DdGwJgCwBsgRAlgBZAvia/U+AAQC7C81YuvD/hwAAAABJRU5ErkJggg==" />
+	</p>
+	<br />
+	<p style="text-align: justify;">
+		The level to be displayed is transferred in <code>msg.payload</code>. The limits at which the display color changes can be specified in the node configuration.
+	</p>
+</script>
